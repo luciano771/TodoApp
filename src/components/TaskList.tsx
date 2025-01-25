@@ -21,7 +21,7 @@ import {
     const [newTask,setNewTask] = useState('');
 
     const createTask = () =>{
-        setTasks([...tasks,{_id: tasks.length - 1 ,description: newTask}])
+        setTasks([...tasks,{_id: tasks.length + 1 ,description: newTask}])
         setNewTask('')
     }
 
@@ -37,8 +37,7 @@ import {
           renderItem={({ item }) => (
             <TaskListItem task={item}  />
           )} 
-        />
-  
+        /> 
         {/* New task input */}
         <TextInput
           value={newTask}
@@ -51,25 +50,26 @@ import {
       </View>
     );
   }
-  
-  const styles = StyleSheet.create({
-    container: {
-      backgroundColor: '#101112',
-      padding: 10,
-      borderRadius: 5,
-      gap: 5,
-      flex: 1,
-    },
-    title: {
-      color: 'white',
-      fontWeight: 'bold',
-      fontSize: 20,
-      marginVertical: 10,
-    },
-    input: {
-      color: 'white',
-      padding: 15,
-      backgroundColor: '#1D2125',
-      borderRadius: 5,
-    },
-  });
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#101112',
+    padding: 10,
+    borderRadius: 5,
+    gap: 5, 
+  },
+  title: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 20,
+    marginVertical: 10,
+  },
+  input: {
+    color: 'white',
+    padding: 10,
+    backgroundColor: '#1D2125',
+    borderRadius: 5,
+    margin:5,
+    marginTop:3
+  },
+});

@@ -1,6 +1,6 @@
-import { Link, Slot, Stack } from 'expo-router';
-import { Text, View } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
+import {  Stack } from 'expo-router';
+ 
+import { StatusBar } from 'expo-status-bar'; 
 import { ThemeProvider, DarkTheme } from '@react-navigation/native';
  import Realm from '../providers/Realm';
 export default function RootLayout() {
