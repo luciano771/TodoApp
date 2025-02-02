@@ -1,55 +1,59 @@
 import {
-    View,
-    Text,
-    FlatList,
-    TextInput,
-    Button,
-    StyleSheet,
-  } from 'react-native';
-  import TaskListItem from './TaskListItem';
-   import { useState } from 'react';
-  export default function TaskList() {
-     
-    const [tasks, setTasks] = useState([
-        { _id: 1, description: "Remember Jira 434" },
-        { _id: 2, description: "Review PR #123" },
-        { _id: 3, description: "Update documentation" },
-        { _id: 4, description: "Fix bug in login page" },
-        { _id: 5, description: "Prepare presentation for meeting" },
-    ]);
+  View,
+  Text,
+  FlatList,
+  TextInput,
+  Button,
+  StyleSheet,
+} from 'react-native';
+import TaskListItem from './TaskListItem';
+import { useState } from 'react'; 
+import { useQuery, useRealm } from '@realm/react'; // Usa useRealm en lugar de crear una instancia manual
+import { Task } from '../models/Task'; 
 
-    const [newTask,setNewTask] = useState('');
+export default function TaskList() {
+  const realm = useRealm(); // Obtiene la instancia de Realm correcta
+  const tasks = useQuery(Task); // Obtiene las tareas correctamente
+  const [newTask, setNewTask] = useState('');
 
-    const createTask = () =>{
-        setTasks([...tasks,{_id: tasks.length + 1 ,description: newTask}])
-        setNewTask('')
-    }
+  // Función para agregar tareas
+  const createTask = () => {
+    if (!newTask.trim()) return; // Evita agregar tareas vacías
 
-    
- 
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Todo</Text>
-  
-        {/* The list of tasks */}
-        <FlatList 
-          data={tasks}
-          renderItem={({ item }) => (
-            <TaskListItem task={item}  />
-          )} 
-        /> 
-        {/* New task input */}
-        <TextInput
-          value={newTask}
-          onChangeText={setNewTask}
-          placeholder="New task"
-          placeholderTextColor="gray"
-          style={styles.input}
-        />
-        <Button title="Add task" onPress={createTask} />
-      </View>
-    );
-  }
+    realm.write(() => {
+      realm.create('Task', { 
+        description: newTask,
+        user_id: '123'
+      });
+    });
+
+    setNewTask(''); // Limpia el input después de agregar la tarea
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Todo</Text>
+
+      {/* Lista de tareas */}
+      <FlatList 
+        data={tasks}
+        renderItem={({ item }) => (
+          <TaskListItem task={item} />
+        )} 
+      /> 
+
+      {/* Input para nueva tarea */}
+      <TextInput
+        value={newTask}
+        onChangeText={setNewTask}
+        placeholder="New task"
+        placeholderTextColor="gray"
+        style={styles.input}
+      />
+      <Button title="Add task" onPress={createTask} />
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
